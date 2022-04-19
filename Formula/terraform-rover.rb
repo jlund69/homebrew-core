@@ -17,7 +17,8 @@ class TerraformRover < Formula
 
   depends_on "go" => :build
   depends_on "node"
-  depends_on "terraform"
+  depends_on "terraform" => :recommended
+  depends_on "tfenv" => :optional
 
   def install
     Language::Node.setup_npm_environment
