@@ -1,0 +1,4 @@
+## 2024-10-27 - GitHub Actions Command Injection Vulnerability Pattern
+**Vulnerability:** Command Injection in GitHub Actions workflow script using user-controlled properties (like `${{github.event.inputs...}}`) in `run:` statements.
+**Learning:** Directly embedding GitHub action expressions within bash scripts using `${{ ... }}` causes them to be interpolated *before* the script is executed. If an attacker controls these inputs (e.g., passing `foo; ls -la` in an input), it allows arbitrary bash command execution on the runner, leading to privilege escalation, secrets exfiltration, or repository compromise.
+**Prevention:** Instead of interpolating `${{ github.event.inputs.variable }}`, store the context value in an environment variable (`env:`) and reference it as a bash variable (e.g., `$MY_VAR`) inside the `run:` block. This ensures bash treats it securely as a string variable rather than raw script code.
