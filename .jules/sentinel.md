@@ -1,0 +1,4 @@
+## 2024-05-16 - GitHub Actions Workflow Command Injection
+**Vulnerability:** GitHub Actions workflows in `.github/workflows/dispatch-rebottle.yml` and `.github/workflows/publish-commit-bottles.yml` were vulnerable to command injection. They were directly interpolating `github.event.inputs` directly into shell `run` blocks using `${{ github.event.inputs... }}`.
+**Learning:** Interpolating `github.*` contexts directly into `run` blocks allows an attacker to inject shell commands if the input contains shell metacharacters like `;`, `&`, `|`, because GitHub Actions does text replacement before executing the shell script.
+**Prevention:** Always map untrusted inputs from the `github` context to environment variables (`env:` block) and reference those variables in the `run` block (e.g., `$MY_VAR`), as this leverages the shell's secure handling of environment variables, preventing execution of injected commands.
