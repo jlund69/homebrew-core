@@ -59,14 +59,21 @@ jobs:
     steps:
       - name: ${{github.event.inputs.formula}}
         id: print_details
+        env:
+          FORMULA: ${{github.event.inputs.formula}}
+          RUNNER: ${{github.event.inputs.runner}}
+          TIMEOUT: ${{github.event.inputs.timeout}}
+          ISSUE: ${{github.event.inputs.issue}}
+          UPLOAD: ${{github.event.inputs.upload}}
+          WHEEZY: ${{github.event.inputs.wheezy}}
         run: |
           echo sender=${{github.event.sender.login}}
-          echo formula=${{github.event.inputs.formula}}
-          echo runner=${{github.event.inputs.runner}}
-          echo timeout=${{github.event.inputs.timeout}}
-          echo issue=${{github.event.inputs.issue}}
-          echo upload=${{github.event.inputs.upload}}
-          echo wheezy=${{github.event.inputs.wheezy}}
+          echo formula=$FORMULA
+          echo runner=$RUNNER
+          echo timeout=$TIMEOUT
+          echo issue=$ISSUE
+          echo upload=$UPLOAD
+          echo wheezy=$WHEEZY
 
       - name: Set environment variables
         if: runner.os == 'macOS'
@@ -114,13 +121,15 @@ jobs:
           fi
 
       - name: Run brew test-bot --only-formulae --keep-old --only-json-tab --skip-online-checks --skip-dependents ${{github.event.inputs.formula}}
+        env:
+          FORMULA: ${{github.event.inputs.formula}}
         run: |
           if [ "$RUNNER_OS" = 'macOS' ]; then
             mkdir bottles
             cd bottles
-            brew test-bot --only-formulae --keep-old --only-json-tab --skip-online-checks --skip-dependents ${{github.event.inputs.formula}}
+            brew test-bot --only-formulae --keep-old --only-json-tab --skip-online-checks --skip-dependents "$FORMULA"
           else
-            docker exec ${{github.sha}} brew test-bot --only-formulae --keep-old --only-json-tab --skip-online-checks --skip-dependents ${{github.event.inputs.formula}}
+            docker exec ${{github.sha}} brew test-bot --only-formulae --keep-old --only-json-tab --skip-online-checks --skip-dependents "$FORMULA"
           fi
 
       - name: Copy bottles from container
