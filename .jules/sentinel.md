@@ -1,0 +1,4 @@
+## 2024-05-18 - GitHub Actions Command Injection Risk
+**Vulnerability:** User-controlled inputs via `github.event.inputs` were directly interpolated into shell scripts in `run:` blocks within GitHub Actions workflow files (e.g., `publish-commit-bottles.yml`, `dispatch-rebottle.yml`, `dispatch-build-bottle.yml`).
+**Learning:** Directly interpolating variables using `${{ }}` syntax in shell scripts exposes workflows to command injection. If a malicious user supplies inputs containing shell syntax like `;`, `&&`, or backticks, they could execute arbitrary commands in the context of the GitHub Actions runner.
+**Prevention:** Always pass user-controlled inputs (or any dynamic properties from `github.event`) into shell scripts by defining them in the `env:` block, and referencing them securely as environment variables (e.g., `$INPUT_ARGS`) within the script.
