@@ -41,7 +41,10 @@ jobs:
 
       - name: Determine runners
         id: determine-runners
-        run: brew determine-rebottle-runners "${{github.event.inputs.formula}}" "${{github.event.inputs.timeout}}"
+        env:
+          INPUT_FORMULA: ${{github.event.inputs.formula}}
+          INPUT_TIMEOUT: ${{github.event.inputs.timeout}}
+        run: brew determine-rebottle-runners "$INPUT_FORMULA" "$INPUT_TIMEOUT"
 
   bottle:
     needs: setup
@@ -60,12 +63,18 @@ jobs:
     steps:
       - name: ${{github.event.inputs.formula}}
         id: print_details
+        env:
+          SENDER: ${{github.event.sender.login}}
+          FORMULA: ${{github.event.inputs.formula}}
+          TIMEOUT: ${{github.event.inputs.timeout}}
+          ISSUE: ${{github.event.inputs.issue}}
+          UPLOAD: ${{github.event.inputs.upload}}
         run: |
-          echo sender=${{github.event.sender.login}}
-          echo formula=${{github.event.inputs.formula}}
-          echo timeout=${{github.event.inputs.timeout}}
-          echo issue=${{github.event.inputs.issue}}
-          echo upload=${{github.event.inputs.upload}}
+          echo "sender=$SENDER"
+          echo "formula=$FORMULA"
+          echo "timeout=$TIMEOUT"
+          echo "issue=$ISSUE"
+          echo "upload=$UPLOAD"
 
       - name: Set environment variables
         if: runner.os == 'macOS'
@@ -85,10 +94,11 @@ jobs:
       - name: Run brew test-bot --only-formulae --only-json-tab --skip-online-checks --skip-dependents
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          INPUT_FORMULA: ${{github.event.inputs.formula}}
         run: |
           mkdir bottles
           cd bottles
-          brew test-bot --only-formulae --only-json-tab --skip-online-checks --skip-dependents ${{github.event.inputs.formula}}
+          brew test-bot --only-formulae --only-json-tab --skip-online-checks --skip-dependents "$INPUT_FORMULA"
 
       - name: Failures summary for brew test-bot --only-formulae
         if: always()
