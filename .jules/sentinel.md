@@ -1,0 +1,4 @@
+## 2024-05-18 - Command Injection in GitHub Actions workflows
+**Vulnerability:** Found multiple instances where user-controlled inputs (`github.event.inputs.*` and `github.event.sender.login`) were being directly interpolated into shell scripts using `${{ }}` syntax within GitHub Actions `run:` blocks.
+**Learning:** This pattern is a classic command injection vulnerability. When GitHub evaluates `${{ }}`, it essentially performs a text replacement before running the script. An attacker providing input like `some-formula"; echo "pwned` could hijack the shell execution environment.
+**Prevention:** Always map user-controlled context variables into environment variables via the `env:` block, and reference them normally in shell scripts (e.g., `$VAR` or `"${VAR}"`) rather than using direct `${{ }}` evaluation within the `run:` block.
