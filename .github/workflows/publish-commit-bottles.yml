@@ -24,7 +24,7 @@ jobs:
     container: ${{github.event.inputs.self_hosted == 'true' && fromJson('{"image":"ghcr.io/homebrew/ubuntu16.04:master","options":"--user=linuxbrew -e GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED"}') || ''}}
     steps:
       - name: Post comment once started
-        uses: Homebrew/actions/post-comment@master
+        uses: Homebrew/actions/post-comment@main
         with:
           token: ${{secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN}}
           issue: ${{github.event.inputs.pull_request}}
@@ -34,7 +34,7 @@ jobs:
 
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+        uses: Homebrew/actions/setup-homebrew@main
         with:
           test-bot: false
 
@@ -67,10 +67,10 @@ jobs:
         run: brew install-bundler-gems
 
       - name: Configure Git user
-        uses: Homebrew/actions/git-user-config@master
+        uses: Homebrew/actions/git-user-config@main
 
       - name: Set up commit signing
-        uses: Homebrew/actions/setup-commit-signing@master
+        uses: Homebrew/actions/setup-commit-signing@main
         with:
           signing_key: ${{ secrets.BREWTESTBOT_GPG_SIGNING_SUBKEY }}
 
@@ -86,7 +86,7 @@ jobs:
         run: brew pr-pull --debug --workflows=tests.yml --committer="$BREWTESTBOT_NAME_EMAIL" --root-url="https://ghcr.io/v2/homebrew/core" $HOMEBREW_PR_ARGS $HOMEBREW_PR_NUMBER
 
       - name: Push commits
-        uses: Homebrew/actions/git-try-push@master
+        uses: Homebrew/actions/git-try-push@main
         with:
           token: ${{secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN}}
           directory: /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core
@@ -97,7 +97,7 @@ jobs:
 
       - name: Post comment on failure
         if: ${{!success()}}
-        uses: Homebrew/actions/post-comment@master
+        uses: Homebrew/actions/post-comment@main
         with:
           token: ${{secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN}}
           issue: ${{github.event.inputs.pull_request}}
@@ -107,7 +107,7 @@ jobs:
 
       - name: Dismiss approvals on failure
         if: ${{!success()}}
-        uses: Homebrew/actions/dismiss-approvals@master
+        uses: Homebrew/actions/dismiss-approvals@main
         with:
           token: ${{secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN}}
           pr: ${{github.event.inputs.pull_request}}
