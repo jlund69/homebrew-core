@@ -21,7 +21,7 @@ jobs:
     if: github.repository == 'Homebrew/homebrew-core'
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/homebrew/ubuntu16.04:main
+      image: ghcr.io/homebrew/ubuntu16.04:master
     env:
       HOMEBREW_SIMULATE_MACOS_ON_LINUX: 1
     outputs:
@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@main
+        uses: Homebrew/actions/setup-homebrew@master
 
       - run: brew test-bot --only-tap-syntax
 
@@ -145,7 +145,7 @@ jobs:
               container.image = 'homebrew/debian7:latest'
             } else {
               console.log('No CI-linux-wheezy label found. Using default Homebrew (Ubuntu 16.04) container.')
-              container.image = 'ghcr.io/homebrew/ubuntu16.04:main'
+              container.image = 'ghcr.io/homebrew/ubuntu16.04:master'
             }
             container.options = '--user=linuxbrew -e GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED'
             core.setOutput('container', JSON.stringify(container))
@@ -219,7 +219,7 @@ jobs:
 
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@main
+        uses: Homebrew/actions/setup-homebrew@master
 
       - run: brew test-bot --only-cleanup-before
 

@@ -764,19 +764,19 @@ jobs:
     if: github.repository == 'Homebrew/homebrew-core'
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/homebrew/ubuntu16.04:main
+      image: ghcr.io/homebrew/ubuntu16.04:master
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@main
+        uses: Homebrew/actions/setup-homebrew@master
 
       - name: Configure Git user
-        uses: Homebrew/actions/git-user-config@main
+        uses: Homebrew/actions/git-user-config@master
         with:
           username: ${{ (github.event_name == 'workflow_dispatch' && github.actor) || 'BrewTestBot' }}
 
       - name: Bump formulae
-        uses: Homebrew/actions/bump-formulae@main
+        uses: Homebrew/actions/bump-formulae@master
         continue-on-error: true
         with:
           token: ${{ secrets.HOMEBREW_CORE_REPO_WORKFLOW_TOKEN }}

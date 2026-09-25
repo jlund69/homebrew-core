@@ -31,13 +31,13 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/homebrew/ubuntu16.04:main
+      image: ghcr.io/homebrew/ubuntu16.04:master
     outputs:
       runners: ${{steps.determine-runners.outputs.runners}}
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@main
+        uses: Homebrew/actions/setup-homebrew@master
 
       - name: Determine runners
         id: determine-runners
@@ -85,7 +85,7 @@ jobs:
 
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@main
+        uses: Homebrew/actions/setup-homebrew@master
 
       - run: brew test-bot --only-cleanup-before
 
@@ -151,7 +151,7 @@ jobs:
 
       - name: Post comment on failure
         if: ${{!success() && github.event.inputs.issue > 0}}
-        uses: Homebrew/actions/post-comment@main
+        uses: Homebrew/actions/post-comment@master
         with:
           token: ${{secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN}}
           issue: ${{github.event.inputs.issue}}
@@ -168,7 +168,7 @@ jobs:
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@main
+        uses: Homebrew/actions/setup-homebrew@master
 
       - name: Download bottles from GitHub Actions
         uses: actions/download-artifact@main
@@ -177,10 +177,10 @@ jobs:
           path: ~/bottles/
 
       - name: Setup git
-        uses: Homebrew/actions/git-user-config@main
+        uses: Homebrew/actions/git-user-config@master
 
       - name: Set up commit signing
-        uses: Homebrew/actions/setup-commit-signing@main
+        uses: Homebrew/actions/setup-commit-signing@master
         with:
           signing_key: ${{ secrets.BREWTESTBOT_GPG_SIGNING_SUBKEY }}
 
@@ -195,7 +195,7 @@ jobs:
           brew pr-upload --verbose --committer="$BREWTESTBOT_NAME_EMAIL" --root-url="https://ghcr.io/v2/homebrew/core" --debug
 
       - name: Push commits
-        uses: Homebrew/actions/git-try-push@main
+        uses: Homebrew/actions/git-try-push@master
         with:
           token: ${{secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN}}
         env:
@@ -205,7 +205,7 @@ jobs:
 
       - name: Post comment on failure
         if: ${{!success() && github.event.inputs.issue > 0}}
-        uses: Homebrew/actions/post-comment@main
+        uses: Homebrew/actions/post-comment@master
         with:
           token: ${{secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN}}
           issue: ${{github.event.inputs.issue}}
