@@ -31,7 +31,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/homebrew/ubuntu16.04:master
+      image: ghcr.io/homebrew/ubuntu16.04:main
     outputs:
       runners: ${{steps.determine-runners.outputs.runners}}
     steps:
