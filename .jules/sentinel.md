@@ -1,0 +1,5 @@
+## 2024-05-20 - Prevent Command Injection in GitHub Actions
+
+**Vulnerability:** Command injection vulnerability in GitHub Actions workflows due to direct string interpolation of user-controlled inputs (e.g. `${{ github.event.inputs.* }}`) within shell `run:` blocks.
+**Learning:** GitHub Actions performs macro replacement before executing the shell script, allowing an attacker to inject arbitrary shell commands if the input contains malicious characters (e.g., `;`, `|`, `$()`). This is a critical risk when triggering workflows via `workflow_dispatch` with user-provided parameters.
+**Prevention:** Always map user-controlled inputs to environment variables within the step's `env:` block and reference those environment variables securely (e.g., `$MY_INPUT` or `"$MY_INPUT"`) inside the `run:` block, rather than directly interpolating `${{ ... }}`.
