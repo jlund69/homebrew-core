@@ -37,7 +37,7 @@ jobs:
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+        uses: Homebrew/actions/setup-homebrew@main
 
       - name: Determine runners
         id: determine-runners
@@ -85,7 +85,7 @@ jobs:
 
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+        uses: Homebrew/actions/setup-homebrew@main
 
       - run: brew test-bot --only-cleanup-before
 
@@ -151,7 +151,7 @@ jobs:
 
       - name: Post comment on failure
         if: ${{!success() && github.event.inputs.issue > 0}}
-        uses: Homebrew/actions/post-comment@master
+        uses: Homebrew/actions/post-comment@main
         with:
           token: ${{secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN}}
           issue: ${{github.event.inputs.issue}}
@@ -168,7 +168,7 @@ jobs:
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+        uses: Homebrew/actions/setup-homebrew@main
 
       - name: Download bottles from GitHub Actions
         uses: actions/download-artifact@main
@@ -177,10 +177,10 @@ jobs:
           path: ~/bottles/
 
       - name: Setup git
-        uses: Homebrew/actions/git-user-config@master
+        uses: Homebrew/actions/git-user-config@main
 
       - name: Set up commit signing
-        uses: Homebrew/actions/setup-commit-signing@master
+        uses: Homebrew/actions/setup-commit-signing@main
         with:
           signing_key: ${{ secrets.BREWTESTBOT_GPG_SIGNING_SUBKEY }}
 
@@ -195,7 +195,7 @@ jobs:
           brew pr-upload --verbose --committer="$BREWTESTBOT_NAME_EMAIL" --root-url="https://ghcr.io/v2/homebrew/core" --debug
 
       - name: Push commits
-        uses: Homebrew/actions/git-try-push@master
+        uses: Homebrew/actions/git-try-push@main
         with:
           token: ${{secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN}}
         env:
@@ -205,7 +205,7 @@ jobs:
 
       - name: Post comment on failure
         if: ${{!success() && github.event.inputs.issue > 0}}
-        uses: Homebrew/actions/post-comment@master
+        uses: Homebrew/actions/post-comment@main
         with:
           token: ${{secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN}}
           issue: ${{github.event.inputs.issue}}
