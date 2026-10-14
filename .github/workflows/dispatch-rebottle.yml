@@ -41,7 +41,10 @@ jobs:
 
       - name: Determine runners
         id: determine-runners
-        run: brew determine-rebottle-runners "${{github.event.inputs.formula}}" "${{github.event.inputs.timeout}}"
+        env:
+          GITHUB_EVENT_INPUTS_FORMULA: ${{github.event.inputs.formula}}
+          GITHUB_EVENT_INPUTS_TIMEOUT: ${{github.event.inputs.timeout}}
+        run: brew determine-rebottle-runners "$GITHUB_EVENT_INPUTS_FORMULA" "$GITHUB_EVENT_INPUTS_TIMEOUT"
 
   bottle:
     needs: setup
@@ -60,12 +63,18 @@ jobs:
     steps:
       - name: ${{github.event.inputs.formula}}
         id: print_details
+        env:
+          GITHUB_EVENT_SENDER_LOGIN: ${{github.event.sender.login}}
+          GITHUB_EVENT_INPUTS_FORMULA: ${{github.event.inputs.formula}}
+          GITHUB_EVENT_INPUTS_TIMEOUT: ${{github.event.inputs.timeout}}
+          GITHUB_EVENT_INPUTS_ISSUE: ${{github.event.inputs.issue}}
+          GITHUB_EVENT_INPUTS_UPLOAD: ${{github.event.inputs.upload}}
         run: |
-          echo sender=${{github.event.sender.login}}
-          echo formula=${{github.event.inputs.formula}}
-          echo timeout=${{github.event.inputs.timeout}}
-          echo issue=${{github.event.inputs.issue}}
-          echo upload=${{github.event.inputs.upload}}
+          echo sender=$GITHUB_EVENT_SENDER_LOGIN
+          echo formula=$GITHUB_EVENT_INPUTS_FORMULA
+          echo timeout=$GITHUB_EVENT_INPUTS_TIMEOUT
+          echo issue=$GITHUB_EVENT_INPUTS_ISSUE
+          echo upload=$GITHUB_EVENT_INPUTS_UPLOAD
 
       - name: Set environment variables
         if: runner.os == 'macOS'
@@ -85,10 +94,11 @@ jobs:
       - name: Run brew test-bot --only-formulae --only-json-tab --skip-online-checks --skip-dependents
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_EVENT_INPUTS_FORMULA: ${{github.event.inputs.formula}}
         run: |
           mkdir bottles
           cd bottles
-          brew test-bot --only-formulae --only-json-tab --skip-online-checks --skip-dependents ${{github.event.inputs.formula}}
+          brew test-bot --only-formulae --only-json-tab --skip-online-checks --skip-dependents "$GITHUB_EVENT_INPUTS_FORMULA"
 
       - name: Failures summary for brew test-bot --only-formulae
         if: always()
