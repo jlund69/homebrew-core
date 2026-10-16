@@ -1,4 +1,0 @@
-## 2026-10-16 - [Command Injection in GitHub Actions]
-**Vulnerability:** Untrusted user input (`github.event.inputs.args` and `github.event.inputs.pull_request`) was interpolated directly into a bash script within a `run:` block in `.github/workflows/publish-commit-bottles.yml` via `${{ github.event.inputs }}` syntax. This allows a malicious user to craft inputs that break out of the string context and execute arbitrary shell commands on the runner.
-**Learning:** GitHub Actions expressions (`${{ }}`) are evaluated before the shell script runs. Direct interpolation of user-controlled variables like `github.event.inputs` can easily lead to command injection if the input contains shell metacharacters.
-**Prevention:** Always pass user-controlled data into shell scripts using environment variables (`env:` block) and reference those variables safely in bash (e.g., `$VAR_NAME` or `"$VAR_NAME"`).
