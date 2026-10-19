@@ -41,7 +41,11 @@ jobs:
 
       - name: Determine runners
         id: determine-runners
-        run: brew determine-rebottle-runners "${{github.event.inputs.formula}}" "${{github.event.inputs.timeout}}"
+        env:
+          FORMULA: ${{github.event.inputs.formula}}
+          TIMEOUT: ${{github.event.inputs.timeout}}
+        # Passed via env to prevent command injection
+        run: brew determine-rebottle-runners "$FORMULA" "$TIMEOUT"
 
   bottle:
     needs: setup
