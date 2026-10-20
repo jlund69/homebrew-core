@@ -100,7 +100,7 @@ jobs:
       - name: Set up Homebrew
         id: set-up-homebrew
         if: runner.os == 'macOS'
-        uses: Homebrew/actions/setup-homebrew@main
+        uses: Homebrew/actions/setup-homebrew@master
 
       - if: runner.os == 'macOS'
         run: brew test-bot --only-cleanup-before
@@ -142,7 +142,7 @@ jobs:
 
       - name: Upload logs
         if: always()
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@v3
         with:
           name: logs
           path: bottles/logs
@@ -167,7 +167,7 @@ jobs:
 
       - name: Upload failed bottles
         if: always() && steps.bottles.outputs.failures > 0
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@v3
         with:
           name: bottles-${{ matrix.runner }}
           path: bottles/failed
@@ -180,7 +180,7 @@ jobs:
 
       - name: Upload bottles to GitHub Actions
         if: always() && steps.bottles.outputs.count > 0
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@v3
         with:
           name: bottles
           path: bottles
@@ -197,7 +197,7 @@ jobs:
 
       - name: Post comment on failure
         if: ${{!success() && github.event.inputs.issue > 0}}
-        uses: Homebrew/actions/post-comment@main
+        uses: Homebrew/actions/post-comment@master
         with:
           token: ${{secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN}}
           issue: ${{github.event.inputs.issue}}
@@ -213,10 +213,10 @@ jobs:
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@main
+        uses: Homebrew/actions/setup-homebrew@master
 
       - name: Download bottles from GitHub Actions
-        uses: actions/download-artifact@main
+        uses: actions/download-artifact@v3
         with:
           name: bottles
           path: ~/bottles/
@@ -246,10 +246,10 @@ jobs:
         run: brew install-bundler-gems
 
       - name: Configure Git user
-        uses: Homebrew/actions/git-user-config@main
+        uses: Homebrew/actions/git-user-config@master
 
       - name: Set up commit signing
-        uses: Homebrew/actions/setup-commit-signing@main
+        uses: Homebrew/actions/setup-commit-signing@master
         with:
           signing_key: ${{ secrets.BREWTESTBOT_GPG_SIGNING_SUBKEY }}
 
@@ -264,7 +264,7 @@ jobs:
           brew pr-upload --verbose --keep-old --committer="$BREWTESTBOT_NAME_EMAIL" --root-url="https://ghcr.io/v2/homebrew/core"
 
       - name: Push commits
-        uses: Homebrew/actions/git-try-push@main
+        uses: Homebrew/actions/git-try-push@master
         with:
           token: ${{secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN}}
         env:
@@ -274,7 +274,7 @@ jobs:
 
       - name: Post comment on failure
         if: ${{!success() && github.event.inputs.issue > 0}}
-        uses: Homebrew/actions/post-comment@main
+        uses: Homebrew/actions/post-comment@master
         with:
           token: ${{secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN}}
           issue: ${{github.event.inputs.issue}}
