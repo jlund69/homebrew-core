@@ -1,0 +1,4 @@
+## 2024-05-15 - Command Injection Vulnerability in GitHub Actions workflows
+**Vulnerability:** User inputs (`github.event.inputs.*`) are interpolated directly into bash scripts in `run:` blocks, leading to command injection vulnerabilities.
+**Learning:** In GitHub Actions workflows, `run:` steps execute the content in a shell (typically bash). If user inputs from `workflow_dispatch` (which trigger the workflow and take input parameters) are interpolated directly using `${{ github.event.inputs.variable }}`, an attacker providing input like `"args"; some_malicious_command; echo "rest"` could execute arbitrary shell commands.
+**Prevention:** Always pass user inputs through environment variables via the `env:` block. The `run:` block should then reference the bash environment variables (`$VARIABLE` or `${VARIABLE}`) instead of direct GitHub context interpolation.
