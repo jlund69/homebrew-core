@@ -1,0 +1,4 @@
+## 2024-10-22 - GitHub Actions Command Injection via User Inputs
+**Vulnerability:** Command injection in GitHub Actions `run` blocks when using direct string interpolation (`${{ github.event.inputs.VAR }}`) of user-controlled inputs.
+**Learning:** Directly interpolating user-controlled inputs into a shell script creates a severe command injection vulnerability. In this repository, `github.event.inputs.args` could have been crafted to break out of the intended command (e.g. `; rm -rf /`).
+**Prevention:** Always pass user-controlled inputs (like `github.event.inputs`) into shell scripts using environment variables (`env:` block) and reference those variables in the script instead of direct `${{ }}` string interpolation within `run:` blocks.
