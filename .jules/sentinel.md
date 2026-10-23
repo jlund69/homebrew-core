@@ -1,0 +1,4 @@
+## 2025-01-20 - Fix GitHub Actions Command Injection
+**Vulnerability:** Command injection in GitHub Actions workflows via direct interpolation of user-controlled inputs (e.g., `${{ github.event.inputs.formula }}`) within `run:` blocks.
+**Learning:** This existed because workflow authors directly inserted user inputs into bash scripts rather than passing them through environment variables, allowing attackers to inject malicious shell commands.
+**Prevention:** Always pass user-controlled inputs into shell scripts using environment variables (e.g., `env: HOMEBREW_FORMULA: ${{ github.event.inputs.formula }}`) and reference them in `run:` blocks as environment variables (e.g., `$HOMEBREW_FORMULA`) to ensure they are handled safely by the shell execution context.
