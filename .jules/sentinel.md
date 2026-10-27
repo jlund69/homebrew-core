@@ -1,0 +1,4 @@
+## 2024-10-27 - [Command Injection via github.event.inputs]
+**Vulnerability:** Untrusted user input via `github.event.inputs` is interpolated directly into `run:` blocks in GitHub Actions workflows (.github/workflows/dispatch-rebottle.yml, .github/workflows/dispatch-build-bottle.yml, .github/workflows/publish-commit-bottles.yml), leading to command injection vulnerabilities.
+**Learning:** `run:` blocks execute the text verbatim. Using `${{ ... }}` interpolation on user-supplied variables allows an attacker to inject shell metacharacters and arbitrary commands, which could leak secrets or compromise CI runners.
+**Prevention:** To prevent this, always assign user-controlled inputs to environment variables in the step`s `env:` mapping, and reference those environment variables within the bash script, taking care to quote them properly.
