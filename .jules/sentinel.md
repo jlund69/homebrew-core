@@ -1,0 +1,4 @@
+## 2025-02-27 - [Fix command injection vulnerability]
+**Vulnerability:** Found a command injection vulnerability where user-controlled inputs `github.event.inputs.args` and `github.event.inputs.pull_request` were passed into a `run` block in a GitHub Actions workflow `.github/workflows/publish-commit-bottles.yml` via direct string interpolation (`${{ ... }}`).
+**Learning:** To prevent command injection in GitHub Actions workflows, always pass user-controlled inputs (e.g., `github.event.inputs`) into shell scripts using environment variables (`env:` block) instead of direct `${{ }}` string interpolation within `run:` blocks.
+**Prevention:** Always map user-controlled GitHub action inputs to environment variables and use `$VAR` inside bash scripts rather than `${{ github.event.inputs.var }}`.
