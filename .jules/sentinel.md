@@ -1,0 +1,4 @@
+## 2024-05-15 - Command Injection in GitHub Actions
+**Vulnerability:** GitHub Actions workflows contained command injection vulnerabilities due to unquoted interpolation of `${{ github.event.inputs.* }}` variables directly into bash `run:` blocks.
+**Learning:** In GitHub Actions, `${{ }}` variables are evaluated and substituted as plain text *before* the shell script executes. If a user-supplied input (like a pull request title, branch name, or workflow input) contains shell metacharacters like `;`, `&`, `$()`, or quotes, the substituted text can change the structure of the shell command and allow execution of arbitrary code in the context of the runner.
+**Prevention:** Always pass user-controlled inputs into shell scripts via environment variables (using the `env:` block) and reference them as shell variables (e.g., `$VAR` or `"${VAR}"`) within the `run:` block, rather than using `${{ }}` directly.
