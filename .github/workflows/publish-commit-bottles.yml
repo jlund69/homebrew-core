@@ -76,12 +76,15 @@ jobs:
 
       - name: Pull and upload bottles to GitHub Packages
         env:
+          # SECURITY: Pass inputs via env vars to prevent command injection
+          HOMEBREW_ARGS: ${{github.event.inputs.args}}
+          HOMEBREW_PR: ${{github.event.inputs.pull_request}}
           BREWTESTBOT_NAME_EMAIL: "BrewTestBot <1589480+BrewTestBot@users.noreply.github.com>"
           HOMEBREW_GPG_PASSPHRASE: ${{ secrets.BREWTESTBOT_GPG_SIGNING_SUBKEY_PASSPHRASE }}
           HOMEBREW_GITHUB_API_TOKEN: ${{secrets.HOMEBREW_CORE_PUBLIC_REPO_EMAIL_TOKEN}}
           HOMEBREW_GITHUB_PACKAGES_USER: brewtestbot
           HOMEBREW_GITHUB_PACKAGES_TOKEN: ${{secrets.HOMEBREW_CORE_GITHUB_PACKAGES_TOKEN}}
-        run: brew pr-pull --debug --workflows=tests.yml --committer="$BREWTESTBOT_NAME_EMAIL" --root-url="https://ghcr.io/v2/homebrew/core" ${{github.event.inputs.args}} ${{github.event.inputs.pull_request}}
+        run: brew pr-pull --debug --workflows=tests.yml --committer="$BREWTESTBOT_NAME_EMAIL" --root-url="https://ghcr.io/v2/homebrew/core" $HOMEBREW_ARGS "$HOMEBREW_PR"
 
       - name: Push commits
         uses: Homebrew/actions/git-try-push@master
